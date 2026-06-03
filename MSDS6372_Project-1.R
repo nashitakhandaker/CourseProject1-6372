@@ -40,5 +40,3 @@ ggplot(hospital,
     color = "Region"
   ) +
   theme_minimal()
-
-ch
