@@ -1,6 +1,7 @@
 library(ggplot2)
 hospital <- read.csv("HospitalDurations.csv")
-hospital
+names(hospital)
+summary(hospital)
 
 # Checking for relationships as apart of the EDA 
 numeric_vars <- hospital[, c("Lgth.of.Sty",
@@ -40,3 +41,26 @@ ggplot(hospital,
     color = "Region"
   ) +
   theme_minimal()
+
+# Fitting the first regression model. All variables are included.
+full_model <- lm(
+  Lgth.of.Sty ~ Age +
+    Inf.Risk +
+    R.Cul.Rat +
+    R.CX.ray.Rat +
+    N.Beds +
+    Med.Sc.Aff +
+    Region +
+    Avg.Pat +
+    Avg.Nur +
+    Pct.Ser.Fac,
+  data = hospital
+)
+
+summary(full_model)
+confint(full_model)
+library(car)
+
+vif(full_model)
+par(mfrow = c(2,2))
+plot(full_model)
