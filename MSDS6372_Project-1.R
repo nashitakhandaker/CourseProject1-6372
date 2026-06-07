@@ -1,9 +1,16 @@
+# Dependencies
+install.packages("caret")
+install.packages("randomForest")
 library(ggplot2)
+library(caret)
+library(randomForest)
 hospital <- read.csv("HospitalDurations.csv")
 names(hospital)
 summary(hospital)
 
-# Checking for relationships as apart of the EDA 
+# EDA
+
+# Feature selection: Checking for relationships as apart of the EDA 
 numeric_vars <- hospital[, c("Lgth.of.Sty",
                              "Age",
                              "Inf.Risk",
@@ -96,6 +103,7 @@ ggplot(hospital, aes(x = N.Beds, y = Lgth.of.Sty)) +
   ) +
   theme_minimal()
 
+# Objective 1
 
 # Fitting the first regression model. All variables are included.
 full_model <- lm(
@@ -125,5 +133,30 @@ plot(full_model)
 
 # MLR model 
 
-
+# Nonparametric model
+# Chosen model: Random forest
+set.seed(1234)
+ctrl <- trainControl(
+  method = "cv",
+  number = 10
+)
+rf_model <- train(
+  Lgth.of.Sty ~ Age +
+    Inf.Risk +
+    R.Cul.Rat +
+    R.CX.ray.Rat +
+    N.Beds +
+    Med.Sc.Aff +
+    Region +
+    Avg.Pat +
+    Avg.Nur +
+    Pct.Ser.Fac,
+  data = hospital,
+  method = "rf",
+  trControl = ctrl,
+  tuneLength = 10
+)
+rf_model
+rf_model$results
+varImp(rf_model)
 
