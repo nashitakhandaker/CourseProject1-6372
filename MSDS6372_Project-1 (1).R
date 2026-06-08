@@ -195,6 +195,18 @@ complex_mlr <- lm(
 summary(complex_mlr)
 confint(complex_mlr)
 
+# The Predicted vs Actual Plot 
+hospital$complex_pred <- predict(complex_mlr, newdata = hospital)
+
+ggplot(hospital, aes(x = complex_pred, y = Lgth.of.Sty)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  labs(
+    title = "Predicted vs Actual Length of Stay",
+    x = "Predicted Length of Stay",
+    y = "Actual Length of Stay"
+  ) +
+  theme_minimal()
 
 # The Nonparametric Model - Random Forest
 set.seed(1234)
@@ -223,6 +235,7 @@ rf_model <- train(
 rf_model
 rf_model$results
 varImp(rf_model)
+plot(varImp(rf_model))
 
 
 # The model comparison 
